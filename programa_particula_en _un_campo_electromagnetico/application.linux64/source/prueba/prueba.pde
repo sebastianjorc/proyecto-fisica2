@@ -2,7 +2,7 @@ PImage background;   // DECLARO IMAGEN DE FONDO
 color boton, letra;  // DECLARO COLOR DE BOTONES Y TEXTOS
 float xPosParticula, yPosParticula, xVelocidad, yVelocidad; // DECLARO POSICIÓN DE PARTICULA
 int xBotonRest,yBotonRest, diametroBotonRest;  // DECLARO BOTON DE RESTAURACIÓN
-int opcion;  float [] datos = {1.0, -1.2};//   String [] titulo;
+int opcion;  float [] datos = {1.0, -1.2, 0.0};//   String [] titulo;
 
 /*  MAIN | BASE DEL CÓDIGO  */ 
 void setup (){
@@ -11,7 +11,7 @@ void setup (){
   boton=color(246,228,174);  letra=color(0);  // ASIGNO COLORES A BOTÓN Y TEXTOS
   xBotonRest=15;  yBotonRest=105;  diametroBotonRest=30;  // ASIGNO VALORES AL BOTÓN DE RESTAURACIÓN
   xPosParticula=18;  yPosParticula=300;  yVelocidad=xVelocidad=0.0;  // ASIGNO VALORES A LA PARTICULA  
-  opcion=0;  datos[0]=1.0;  datos[1]=-1.0;  // ASIGNO VALORES AL ARREGLO (CONTIENE VALORES DE CAMPO SUPERIOR E INFERIOR)
+  opcion=0;  datos[0]=1.0;  datos[1]=-1.0;  datos[2]=0.0;// ASIGNO VALORES AL ARREGLO (CONTIENE VALORES DE CAMPO SUPERIOR E INFERIOR)
 }
 
 /*  FUNCIÓN DRAW | ESTA FUNCIÓN REPRODUCE FRAME A FRAME LO ESCRITO EN ELLA MEDIANTE LA VENTANA  */
@@ -21,6 +21,7 @@ void draw (){
   
   fill (boton);  ellipse(xBotonRest,yBotonRest,diametroBotonRest,diametroBotonRest);  // UBITO BOTÓN 'R' EN LA VENTANA.
   fill (letra);  text("R",xBotonRest-4,yBotonRest+5);  text("Campo superio: " +datos[0],6,22);  text("Campo inferior: " +datos[1],6,584);  // UBICO TODOS LOS TEXTOS DE LA VENTANA
+  text("Carga de particula: "+datos[2],5,330);
   fill (30,45,145);  ellipse(xPosParticula,yPosParticula,16,16);   // UBICO LA PARTICULA EN LA VENTANA
 }
 
@@ -28,8 +29,8 @@ void draw (){
 void keyPressed(){
   if (keyCode==UP)   if (datos[1]+1< 1.0 || opcion!=1) datos[opcion]++;  // SI PRECIONO LA FECHA HACIA ARRIBA, EL CAMPO SELECCIONADO AUMENTA UNO
   if (keyCode==DOWN) if (datos[0]-1>-1.0 || opcion!=0) datos[opcion]--;  // SI PRECIONO LA FLECHA HACIA ABAJO, EL CAMPO SELECCIONADO DISMINUYE UNO
-  if (keyCode==LEFT) {       opcion=0;}  // SELECCIÓNO EL CAMPO SUPERIOR (POSITIVO)
-  if (keyCode==RIGHT){       opcion=1;}  // SELECCIONO EL CAMPO INFERIOR (NEGATIVO)
+  if (keyCode==LEFT && opcion<2) {       opcion++;}  // SELECCIÓNO EL CAMPO SUPERIOR (POSITIVO)
+  if (keyCode==RIGHT && opcion>0){       opcion--;}  // SELECCIONO EL CAMPO INFERIOR (NEGATIVO)
   if (keyCode==' '){  // SI PRECIOSO LA BARRA ESPACIO.. LA PARTICULA SE MOVERÁ SIEMPRE Y CUANDO NO ESTÉ EN UNO DE LOS EXTREMOS DE LA VENTANA
        if (yPosParticula>=0 && yPosParticula<height-10 && xPosParticula<width-20 && yPosParticula>20){ 
           xVelocidad=xVelocidad+0.4;
