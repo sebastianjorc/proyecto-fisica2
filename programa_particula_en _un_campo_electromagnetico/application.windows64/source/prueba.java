@@ -16,9 +16,9 @@ public class prueba extends PApplet {
 
 PImage background;   // DECLARO IMAGEN DE FONDO
 int boton, letra;  // DECLARO COLOR DE BOTONES Y TEXTOS
-float xPosParticula, yPosParticula, xVelocidad, yVelocidad; // DECLARO POSICI\u00d3N DE PARTICULA
+float xPosParticula, yPosParticula, xVelocidad, yVelocidad, aceleracion; // DECLARO POSICI\u00d3N DE PARTICULA
 int xBotonRest,yBotonRest, diametroBotonRest;  // DECLARO BOTON DE RESTAURACI\u00d3N
-int opcion;  float [] datos = {1.0f, -1.2f};//   String [] titulo;
+int opcion;  float [] datos = {1.0f, -1.2f, 0.0f};//   String [] titulo;
 
 /*  MAIN | BASE DEL C\u00d3DIGO  */ 
 public void setup (){
@@ -26,8 +26,8 @@ public void setup (){
   background = loadImage ("background.jpg");  // ASIGNO IMAGEN DE FONDO
   boton=color(246,228,174);  letra=color(0);  // ASIGNO COLORES A BOT\u00d3N Y TEXTOS
   xBotonRest=15;  yBotonRest=105;  diametroBotonRest=30;  // ASIGNO VALORES AL BOT\u00d3N DE RESTAURACI\u00d3N
-  xPosParticula=18;  yPosParticula=300;  yVelocidad=xVelocidad=0.0f;  // ASIGNO VALORES A LA PARTICULA  
-  opcion=0;  datos[0]=1.0f;  datos[1]=-1.0f;  // ASIGNO VALORES AL ARREGLO (CONTIENE VALORES DE CAMPO SUPERIOR E INFERIOR)
+  xPosParticula=18;  yPosParticula=300;  yVelocidad=xVelocidad=0.0f;  aceleracion=0.0f;// ASIGNO VALORES A LA PARTICULA  
+  opcion=0;  datos[0]=1.0f;  datos[1]=-1.0f;  datos[2]=0.0f;  // ASIGNO VALORES AL ARREGLO (CONTIENE VALORES DE CAMPO SUPERIOR E INFERIOR)
 }
 
 /*  FUNCI\u00d3N DRAW | ESTA FUNCI\u00d3N REPRODUCE FRAME A FRAME LO ESCRITO EN ELLA MEDIANTE LA VENTANA  */
@@ -37,6 +37,7 @@ public void draw (){
   
   fill (boton);  ellipse(xBotonRest,yBotonRest,diametroBotonRest,diametroBotonRest);  // UBITO BOT\u00d3N 'R' EN LA VENTANA.
   fill (letra);  text("R",xBotonRest-4,yBotonRest+5);  text("Campo superio: " +datos[0],6,22);  text("Campo inferior: " +datos[1],6,584);  // UBICO TODOS LOS TEXTOS DE LA VENTANA
+  text("Valor de particula: " +datos[2],6,330);
   fill (30,45,145);  ellipse(xPosParticula,yPosParticula,16,16);   // UBICO LA PARTICULA EN LA VENTANA
 }
 
@@ -44,15 +45,21 @@ public void draw (){
 public void keyPressed(){
   if (keyCode==UP)   if (datos[1]+1< 1.0f || opcion!=1) datos[opcion]++;  // SI PRECIONO LA FECHA HACIA ARRIBA, EL CAMPO SELECCIONADO AUMENTA UNO
   if (keyCode==DOWN) if (datos[0]-1>-1.0f || opcion!=0) datos[opcion]--;  // SI PRECIONO LA FLECHA HACIA ABAJO, EL CAMPO SELECCIONADO DISMINUYE UNO
-  if (keyCode==LEFT) {       opcion=0;}  // SELECCI\u00d3NO EL CAMPO SUPERIOR (POSITIVO)
-  if (keyCode==RIGHT){       opcion=1;}  // SELECCIONO EL CAMPO INFERIOR (NEGATIVO)
+  if (keyCode==LEFT && opcion>0) {       opcion--;}  // SELECCI\u00d3NO EL CAMPO SUPERIOR (POSITIVO)
+  if (keyCode==RIGHT && opcion<2){       opcion++;}  // SELECCIONO EL CAMPO INFERIOR (NEGATIVO)
   if (keyCode==' '){  // SI PRECIOSO LA BARRA ESPACIO.. LA PARTICULA SE MOVER\u00c1 SIEMPRE Y CUANDO NO EST\u00c9 EN UNO DE LOS EXTREMOS DE LA VENTANA
        if (yPosParticula>=0 && yPosParticula<height-10 && xPosParticula<width-20 && yPosParticula>20){ 
-          xVelocidad=xVelocidad+0.4f;
+         aceleracion = aceleracion +(( (datos[0]-datos[2]) + (datos[1]-datos[2]) ));
+         System.out.println(aceleracion+"\n");
+         if ( aceleracion>0 ){ 
+           yPosParticula=yPosParticula-((aceleracion*aceleracion)*0.001f);         
+         }
+         if ( aceleracion<0 ){           
+           yPosParticula=yPosParticula+((aceleracion*aceleracion)*0.001f);     
+         }            
           xPosParticula=xPosParticula+xVelocidad;
-      
-          yVelocidad=yVelocidad-((datos[0]+datos[1])/10);
-          yPosParticula=yPosParticula+yVelocidad;
+          xVelocidad=xVelocidad+0.4f;
+          
        }
   }  
 }
@@ -61,7 +68,7 @@ public void keyPressed(){
 public void mousePressed(){
   float distanciaConMouse=dist(mouseX, mouseY, xBotonRest, yBotonRest);  //  CREO VARIABLE CON LOS VALORES ENTRE 'R' Y LA POSICI\u00d3N DEL MOUSE DONDE SE CLIQUE
   if (distanciaConMouse<(diametroBotonRest/2)){  // SI LA POSICI\u00d3N DEL MOUSE DONDE CLIQUEAS EST\u00c1 DENTRO DEL BOT\u00d3N R, SE REINICIAN LOS VALORES DE LA PARTICULA
-    xPosParticula=18;  yPosParticula=300;  yVelocidad=xVelocidad=0.0f;
+    xPosParticula=18;  yPosParticula=300;  yVelocidad=xVelocidad=0.0f; aceleracion=0.0f;
   }
 }
   public void settings() {  size (900,600); }
