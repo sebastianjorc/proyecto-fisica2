@@ -27,25 +27,38 @@ void draw (){
 
 /*   FUNCIÓN keyPressed | ESTA FUNCIÓN SE ACTIVA CADA VEZ QUE SE APRIETA UNA TECLA  */ //<>//
 void keyPressed(){
-  if (keyCode==UP)   if (datos[1]+1< 1.0 || opcion!=1) datos[opcion]++;  // SI PRECIONO LA FECHA HACIA ARRIBA, EL CAMPO SELECCIONADO AUMENTA UNO
-  if (keyCode==DOWN) if (datos[0]-1>-1.0 || opcion!=0) datos[opcion]--;  // SI PRECIONO LA FLECHA HACIA ABAJO, EL CAMPO SELECCIONADO DISMINUYE UNO
+  if (keyCode==UP)   if (datos[1]+1< 1.0 || opcion!=1) {
+    datos[opcion]++;  // SI PRECIONO LA FECHA HACIA ARRIBA, EL CAMPO SELECCIONADO AUMENTA UNO
+    if (datos[2]==0) datos[2]++;
+    if (opcion==0) datos[1]=-datos[0];
+    if (opcion==1) datos[0]=-datos[1];
+  }
+  if (keyCode==DOWN) if (datos[0]-1>-1.0 || opcion!=0){
+    datos[opcion]--;  // SI PRECIONO LA FLECHA HACIA ABAJO, EL CAMPO SELECCIONADO DISMINUYE UNO
+    if (datos[2]==0) datos[2]--;
+    if (opcion==0) datos[1]=-datos[0];
+    if (opcion==1) datos[0]=-datos[1];
+  }
   if (keyCode==LEFT && opcion>0) {       opcion--;}  // SELECCIÓNO EL CAMPO SUPERIOR (POSITIVO)
   if (keyCode==RIGHT && opcion<2){       opcion++;}  // SELECCIONO EL CAMPO INFERIOR (NEGATIVO)
   if (keyCode==' '){  // SI PRECIOSO LA BARRA ESPACIO.. LA PARTICULA SE MOVERÁ SIEMPRE Y CUANDO NO ESTÉ EN UNO DE LOS EXTREMOS DE LA VENTANA
        if (yPosParticula>=0 && yPosParticula<height-10 && xPosParticula<width-20 && yPosParticula>20){ 
-         aceleracion = aceleracion +(( (datos[0]-datos[2]) + (datos[1]-datos[2]) ));
-         System.out.println(aceleracion+"\n");
+         if (datos[2]!=0){
+         if (datos[1]!=0 && datos[2]!=0){
+           aceleracion = aceleracion +(( (datos[0]-datos[2]) + (datos[1]-datos[2]) ));
+         }
+       }
          if ( aceleracion>0 ){ 
-           yPosParticula=yPosParticula-((aceleracion*aceleracion)*0.001);         
+           yPosParticula=yPosParticula-((aceleracion*aceleracion)*0.0001);         
          }
          if ( aceleracion<0 ){           
-           yPosParticula=yPosParticula+((aceleracion*aceleracion)*0.001);     
+           yPosParticula=yPosParticula+((aceleracion*aceleracion)*0.0001);     
          }            
           xPosParticula=xPosParticula+xVelocidad;
-          xVelocidad=xVelocidad+0.4;
+          xVelocidad=xVelocidad+0.2;
           
        }
-  }  
+  } 
 }
 
 /*  FUNCIÓN mousePressed | ESTA FUNCIÓN SE ACTIVA CADA VEZ QUE SE PRESIONA UNA TECLA DEL MOUSE  */
